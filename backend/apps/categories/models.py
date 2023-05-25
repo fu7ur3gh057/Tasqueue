@@ -11,6 +11,8 @@ class Category(MPTTModel, UUIDMixin):
     description = models.TextField(blank=True)
     tags = ArrayField(models.CharField(max_length=200), blank=True)
     details = models.JSONField(null=True, blank=True)
+    default_price = models.FloatField(null=True, blank=True)
+
     parent = TreeForeignKey(
         'self',
         on_delete=models.CASCADE,
