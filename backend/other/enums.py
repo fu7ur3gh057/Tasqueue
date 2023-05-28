@@ -16,9 +16,9 @@ class DealStatus(str, Enum):
     COMPLETED = 'completed'
 
 
-class OfferType(str, Enum):
-    CUSTOMER = 'customer_to_worker'
-    WORKER = 'worker_to_customer'
+class OfferInitiative(str, Enum):
+    CUSTOMER = 'customer'
+    WORKER = 'worker'
 
 
 class SubscriptionType(str, Enum):
@@ -35,6 +35,8 @@ class TaskPriority(IntEnum):
     EXTRA_HIGH = 9
 
 
-class UserType(str, Enum):
+class RoleType(str, Enum):
     CUSTOMER = "customer"
     WORKER = "worker"
+    STAFF = "staff"
+    ADMIN = "admin"

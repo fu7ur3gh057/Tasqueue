@@ -1,10 +1,14 @@
+from typing import Any
+
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+# from apps.achievements.models import WorkerAchievement
 from apps.base.models import UUIDTimeStampedMixin, FileMixin, UUIDMixin, AnswerableMixin
-from apps.categories.models import Category
+from apps.services.models import Service
+from other.enums import OfferInitiative
 
 User = get_user_model()
 
@@ -13,9 +17,12 @@ class Worker(UUIDTimeStampedMixin):
     owner = models.OneToOneField(
         User, related_name='worker', on_delete=models.CASCADE
     )
+    services = models.ManyToManyField(Service, related_name='workers')
+    # achievements = models.ForeignKey(
+    #     WorkerAchievement, related_name='workers', on_delete=models.SET_NULL, null=True
+    # )
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
-    category_list = models.ManyToManyField(Category, related_name='workers')
     photo = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=20, null=True, blank=True)
     documents_verified = models.BooleanField(default=False)
@@ -40,15 +47,23 @@ class Worker(UUIDTimeStampedMixin):
     def phone_number(self) -> str:
         return f'{self.owner.phone_number}'
 
-    def save(self, *args, **kwargs):
-        result: list[Category] = self.category_list
-        for category in self.category_list.all():
-            if category.is_root_node():
-                continue
-            ancestors = [i for i in category.get_ancestors() if i not in result]
-            result.extend(ancestors)
-        self.category_list = result
-        super().save()
+    @property
+    def my_offers(self) -> list[Any] | None:
+        return self.offers.filter(initiative=OfferInitiative.WORKER)
+
+    @property
+    def receive_offers(self) -> list[Any] | None:
+        return self.offers.filter(initiative=OfferInitiative.CUSTOMER)
+
+    # def save(self, *args, **kwargs):
+    #     result: list[Service] = []
+    #     for service in self.services.all():
+    #         if service.is_root_node():
+    #             continue
+    #         root = service.parent
+    #         result.append(root)
+    #     self.services.add(*result)
+    #     super().save()
 
     def __str__(self) -> str:
         return self.owner.email
@@ -81,4 +96,3 @@ class Image(FileMixin, UUIDMixin):
     class Meta:
         verbose_name = _("Image")
         verbose_name_plural = _("Images")
-

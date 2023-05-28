@@ -10,10 +10,10 @@ class UserAdmin(BaseUserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = ['pkid', 'id', 'phone_number', 'email', 'is_staff', 'is_superuser', 'is_verified', 'is_active',
+    list_display = ['pkid', 'id', 'phone_number', 'email', 'role', 'is_verified', 'is_active',
                     'created_at']
     list_display_links = ['id', 'email']
-    list_filter = ['email', 'is_staff', 'is_superuser', 'is_verified', 'is_active']
+    list_filter = ['email', 'role', 'is_verified', 'is_active']
     fieldsets = (
         (
             _("Login Credentials"),
@@ -32,9 +32,10 @@ class UserAdmin(BaseUserAdmin):
                     "is_active",
                     "is_staff",
                     "is_superuser",
+                    "role",
                     "is_verified",
-                    "groups",
-                    "user_permissions",
+                    # "groups",
+                    # "user_permissions",
                 )
             },
         ),
@@ -45,7 +46,7 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "password1", "password2", "is_staff", "is_active"),
+                "fields": ("email", "password1", "password2", "role"),
             },
         ),
     )

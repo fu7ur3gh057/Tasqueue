@@ -15,13 +15,9 @@ User = get_user_model()
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=68, min_length=6, write_only=True)
 
-    # default_error_messages = {
-    #     'username': 'The username should only contain alphanumeric characters'
-    # }
-
     class Meta:
         model = User
-        fields = ['email', 'password']
+        fields = ['email', 'phone_number', 'password', 'role']
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -31,6 +27,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        print(validated_data)
         return User.objects.create_user(**validated_data)
 
 

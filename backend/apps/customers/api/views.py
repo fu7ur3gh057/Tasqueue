@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from apps.customers.api.serializers import CustomerUpdateSerializer, CustomerSerializer
 from apps.customers.exceptions import CustomerNotFound
 from apps.customers.models import Customer
+from apps.users.permissions import CustomerPermission
 
 
 # All Views are Authenticated
@@ -23,7 +24,7 @@ class CustomerView(APIView):
 
 
 class MyCustomerView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, CustomerPermission]
     serializer_class = CustomerSerializer
 
     def get(self, request: Request) -> Response:
@@ -35,7 +36,7 @@ class MyCustomerView(APIView):
 
 
 class CustomerUpdateView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, CustomerPermission]
     serializer_class = CustomerUpdateSerializer
 
     def put(self, request: Request) -> Response:

@@ -3,10 +3,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
+
 from apps.base.models import UUIDMixin
 
 
-class Category(MPTTModel, UUIDMixin):
+class Service(MPTTModel, UUIDMixin):
     name = models.CharField(max_length=255, blank=False, null=True)
     description = models.TextField(blank=True)
     tags = ArrayField(models.CharField(max_length=200), blank=True)
@@ -25,8 +26,8 @@ class Category(MPTTModel, UUIDMixin):
         order_insertion_by = ['name']
 
     class Meta:
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
+        verbose_name = _("Service")
+        verbose_name_plural = _("Services")
 
     def __str__(self) -> str:
         return f'{self.name}'

@@ -57,3 +57,14 @@ class BeatMixin(TimeStampedMixin):
 
     class Meta:
         abstract = True
+
+
+class AchievementMixin(models.Model):
+    pkid = models.BigAutoField(primary_key=True, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=False)
+    icon = models.ImageField(upload_to='/achievements')
+
+    class Meta:
+        abstract = True
+

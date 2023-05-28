@@ -1,13 +1,13 @@
 from django.contrib import admin
 
-from apps.categories.models import Category
+from apps.services.models import Service
 
 
 # Register your models here.
-class CategoryAdmin(admin.ModelAdmin):
+class ServiceAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'parent', 'default_price']
     list_display_links = ['id', 'name', 'parent',]
 #    list_filter = ['id', 'owner', 'city', ]
 
 
-admin.site.register(Category, CategoryAdmin)
+admin.site.register(Service, ServiceAdmin)

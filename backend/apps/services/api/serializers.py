@@ -2,18 +2,18 @@ from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
-from apps.categories.models import Category
+from apps.services.models import Service
 
 User = get_user_model()
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Service
         fields = ['pkid', 'name', 'tags']
 
 
-class CategoryListSerializer(serializers.ModelSerializer):
+class ServiceListSerializer(serializers.ModelSerializer):
     workers_count = serializers.SerializerMethodField(read_only=True)
     # deals_count = serializers.SerializerMethodField(read_only=True)
     children = serializers.SerializerMethodField(read_only=True)
@@ -30,7 +30,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
     #     return len(obj.deals.all())
 
     class Meta:
-        model = Category
+        model = Service
         fields = [
             'id',
             'pkid',
@@ -38,13 +38,13 @@ class CategoryListSerializer(serializers.ModelSerializer):
             'description',
             'tags',
             'details',
-            'children',
             'workers_count',
             # 'deals_count'
+            'children',
         ]
 
 
-class CategoryTreeSerializer(serializers.ModelSerializer):
+class ServiceTreeSerializer(serializers.ModelSerializer):
     parent = serializers.SerializerMethodField()
     children = serializers.SerializerMethodField()
     root = serializers.SerializerMethodField()
@@ -67,7 +67,7 @@ class CategoryTreeSerializer(serializers.ModelSerializer):
         return root.name
 
     class Meta:
-        model = Category
+        model = Service
         fields = [
             'pkid',
             'name',

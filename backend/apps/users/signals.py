@@ -11,6 +11,11 @@ User = get_user_model()
 
 # Create customer after user creating
 @receiver(post_save, sender=User)
-def create_customer(sender, instance, created, **kwargs):
-    if created and instance.type == RoleType.CUSTOMER:
-        Customer.objects.create(owner=instance)
+def create_user(sender, instance, created, **kwargs):
+    if not created:
+        return
+    if instance.type == RoleType.ADMIN:
+        instance.is_staff = True
+        instance.is_superuser = True
+    elif instance.type == RoleType.STAFF:
+        instance.is_staff = True

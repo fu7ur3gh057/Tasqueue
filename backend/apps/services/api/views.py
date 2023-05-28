@@ -5,53 +5,53 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.categories.api.serializers import CategoryListSerializer, CategoryTreeSerializer
-from apps.categories.exceptions import CategoryNotFound
-from apps.categories.models import Category
-from apps.categories.pagination import CategoryPagination
+from apps.services.api.serializers import ServiceListSerializer, ServiceTreeSerializer
+from apps.services.exceptions import ServiceNotFound
+from apps.services.models import Service
+from apps.services.pagination import ServicePagination
 
 
-class CategoryFilter(django_filters.FilterSet):
+class ServiceFilter(django_filters.FilterSet):
     id = django_filters.CharFilter(field_name='id', lookup_expr='iexact')
     name = django_filters.CharFilter(field_name='name', lookup_expr='iexact')
 
 
-class CategoryTreeFilter(django_filters.FilterSet):
+class ServiceTreeFilter(django_filters.FilterSet):
     id = django_filters.CharFilter(field_name='id', lookup_expr='iexact')
     name = django_filters.CharFilter(field_name='name', lookup_expr='iexact')
     root = django_filters.CharFilter(field_name='root', lookup_expr='iexact')
 
 
-class CategoryListView(generics.ListAPIView):
-    serializer_class = CategoryListSerializer
-    queryset = Category.objects.all()
-    pagination_class = CategoryPagination
+class ServiceListView(generics.ListAPIView):
+    serializer_class = ServiceListSerializer
+    queryset = Service.objects.all()
+    pagination_class = ServicePagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_class = CategoryFilter
+    filterset_class = ServiceFilter
     search_fields = ['id', 'name']
 
-    def get_queryset(self) -> list[Category]:
+    def get_queryset(self) -> list[Service]:
         return self.queryset.filter(parent=None)
 
 
-class CategoryTreeView(generics.ListAPIView):
-    serializer_class = CategoryTreeSerializer
-    queryset = Category.objects.all()
-    pagination_class = CategoryPagination
+class ServiceTreeView(generics.ListAPIView):
+    serializer_class = ServiceTreeSerializer
+    queryset = Service.objects.all()
+    pagination_class = ServicePagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_class = CategoryFilter
+    filterset_class = ServiceFilter
     search_fields = ['id', 'name']
 
-    def get_queryset(self) -> list[Category]:
+    def get_queryset(self) -> list[Service]:
         return self.queryset.filter(parent__isnull=True)
 
 
-class CategoryView(APIView):
-    serializer_class = CategoryTreeSerializer
+class ServiceView(APIView):
+    serializer_class = ServiceTreeSerializer
 
     def get(self, request: Request, service_id: str) -> Response:
-        category_list = Category.objects.get(id=service_id)
-        if not category_list:
-            raise CategoryNotFound()
-        serializer = self.serializer_class(category_list)
+        services = Service.objects.get(id=service_id)
+        if not services:
+            raise ServiceNotFound()
+        serializer = self.serializer_class(services)
         return Response(serializer.data, status=status.HTTP_200_OK)

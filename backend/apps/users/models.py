@@ -7,7 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.base.models import UUIDTimeStampedMixin
 from apps.users.managers import UserManager
-from other.enums import UserType
+from other.enums import RoleType
 
 
 class User(AbstractBaseUser, PermissionsMixin, UUIDTimeStampedMixin):
@@ -22,7 +22,8 @@ class User(AbstractBaseUser, PermissionsMixin, UUIDTimeStampedMixin):
         null=False,
         unique=True
     )
-    type = EnumChoiceField(UserType, default=UserType.CUSTOMER)
+    role = EnumChoiceField(RoleType, default=RoleType.CUSTOMER)
+
     is_verified = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
